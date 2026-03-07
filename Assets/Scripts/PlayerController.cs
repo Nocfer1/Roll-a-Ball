@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
     public bool showOnlyWhileCharging = true;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
+    private bool hasWon = false;
+    private bool hasLost = false;
+
     // Start is called before the first frame update.
     void Start()
     {
@@ -72,7 +75,6 @@ public class PlayerController : MonoBehaviour
             isJumpHeld = false;
         }
     }
-
     private void Update()
     {
         if (isJumpHeld)
@@ -148,33 +150,62 @@ public class PlayerController : MonoBehaviour
     
     void OnTriggerEnter(Collider other) 
     {
+        if (hasWon) return;
+
         if (other.gameObject.CompareTag("PickUp")) 
         {
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
         }
+
+        if (other.gameObject.CompareTag("ShortcutWin"))
+        {
+            WinGame();
+        }
     }
-    
+
+
     void SetCountText() 
     {
-        countText.text =  "Count: " + count.ToString();
+        countText.text = "Count: " + count.ToString();
+
         if (count >= 8)
         {
-            winTextObject.SetActive(true);
-            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+            WinGame();
         }
     }
     
+    void WinGame()
+    {
+        if (hasWon) return;
+        hasWon = true;
+
+        winTextObject.SetActive(true);
+        winTextObject.GetComponent<TextMeshProUGUI>().text = "You Win!";
+
+        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+        if (enemy != null)
+        {
+            Destroy(enemy);
+        }
+    }
+    
+    // ReSharper disable Unity.PerformanceAnalysis
+    void LoseGame()
+    {
+        if (hasLost) return;
+        hasLost = true;
+
+        gameObject.SetActive(false);
+        winTextObject.gameObject.SetActive(true);
+        winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("DeadlyGround"))
         {
-            // Destroy the current object
-            Destroy(gameObject); 
-            // Update the winText to display "You Lose!"
-            winTextObject.gameObject.SetActive(true);
-            winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+            LoseGame();
         }
     }
 }

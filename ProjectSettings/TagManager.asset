@@ -6,6 +6,8 @@ TagManager:
   tags:
   - PickUp
   - Enemy
+  - ShortcutWin
+  - DeadlyGround
   layers:
   - Default
   - TransparentFX
