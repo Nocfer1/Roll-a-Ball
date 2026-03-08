@@ -15,4 +15,5 @@ Pretty much on this first version was all about learning how different Unity com
 In other words, this was the moment the project stopped being just a tutorial and started becoming my sandbox.
 
 Here's a little spoiler for an extension I made to the game :)
+
 <img width="572" height="315" alt="image" src="https://github.com/user-attachments/assets/55d1f4e7-46d3-4670-879b-3d1e9e759ecb" />
