@@ -10,7 +10,7 @@ For interaction, I added collectible objects that rotate continuously to make th
 
 I also applied Unity’s UI system to show score on screen. The score text element keeps track of how many objects the player has collected, while a win text appears only when the level is complete. That helped tie the systems together: movement gave the player control, collectibles gave them a goal, and UI made progress visible.
 
-Pretty much on this first version was all about learning how different Unity components communicate. The scripts were simple, but they introduced key ideas like collision detection, physics-based movement, object lifecycle, and state updates through UI. More importantly, this prototype became the foundation for the rest of the project. Once the basic Roll-a-Ball loop was working, I had a stable starting point to expand the game with new mechanics, hazards, enemy behavior, and extra interactions in later blog posts.
+Pretty much on this first version was all about learning how different Unity components communicate. The scripts were simple, but they introduced key ideas like collision detection, physics-based movement, object lifecycle, and state updates through UI. More importantly, this prototype became the foundation for the rest of the project. Once the basic Roll-a-Ball loop was working, I had a stable starting point to expand the game with new mechanics, hazards, enemy behavior, and extra interactions.
 
 Here's a little spoiler for an extension I made to the game :)
 
