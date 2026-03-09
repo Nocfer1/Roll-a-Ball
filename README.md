@@ -1,5 +1,4 @@
-# Roll-a-Ball
-This Extended version of Unity's Roll-a-Ball tutorial project with additional mechanics, features, and gameplay improvements.
+# GMD Project
 
 In order to achieve this project, I set a path which contains 6 blogs, take a look at them and dive in!
 
