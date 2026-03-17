@@ -3,7 +3,7 @@ Game Design Document – Cooperative Minigame Project
 The project is going to be focused on developing a two-player game built around a collection of simple but sticky minigames. The main idea is to create a moduler system players/characters are selected first. After selected, interact in a shared lobby, and access different minigames through portals! The game is designed to run efficiently and expected to weight under 500 mb.
 
 
-The game flos is structured as: 
+The game flows is structured as: 
 
 Main Menu - Characters Selection - Lobby - Start Playing!
 
