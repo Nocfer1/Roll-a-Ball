@@ -3,7 +3,7 @@
 In order to achieve this project, I set a path which contains 6 blogs, take a look at them and dive in!
 
 - [Blog Post #1: Roll-a-Ball](BlogPost%231.md)
-- Blog Post #2: Game Design Document & Milestones
+- [Blog Post #2: Game Design Document & Milestones](BlogPost%232.md)
 - Blog Post #3: Development
 - Blog Post #4: Development
 - Blog Post #5: Development
