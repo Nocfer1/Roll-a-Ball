@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 8107875123568310487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.43938, y: 1.412, z: 3.83}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -112,7 +112,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -199,15 +199,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8107875123568310487}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c59495c4fb44609ba4a3e0df18fdf93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tron.TronPlayerController
   playerID: 1
-  cellSize: 1.2
-  stepTime: 0.15
+  moveSpeed: 6
   startInvulnerability: 1
+  ownerTrailArmDelay: 0.12
+  headOnKillDistance: 0.45
+  trailLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  trailCheckRadius: 0.18
+  trailCheckOffset: {x: 0, y: -0.15, z: 0}
 --- !u!114 &-1313877113866313319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,3 +228,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tron.TronTrailSpawner
   trailPrefab: {fileID: 4104822833254086332, guid: fc121e4c463414542b4b813617a7eef3, type: 3}
   playerMaterial: {fileID: 0}
+  trailThickness: 0.4

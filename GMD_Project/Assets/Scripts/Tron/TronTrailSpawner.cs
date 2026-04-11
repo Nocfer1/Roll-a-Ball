@@ -6,18 +6,95 @@ namespace Tron
     {
         public GameObject trailPrefab;
         public Material playerMaterial;
+        public float trailThickness = 0.4f;
 
-        // ReSharper disable Unity.PerformanceAnalysis
-        public void SpawnTrailAtPosition(Vector3 worldPosition)
+        private TronTrailSegment currentSegment;
+        private Vector3 lastDirection;
+        private int ownerPlayerID;
+
+        private Transform trailContainer;
+
+        public void SetOwner(int playerID)
         {
-            Vector3 spawnPosition = new Vector3(worldPosition.x, 0.5f, worldPosition.z);
+            ownerPlayerID = playerID;
+        }
 
-            GameObject segment = Instantiate(trailPrefab, spawnPosition, Quaternion.identity);
+        public void SetTrailContainer(Transform container)
+        {
+            trailContainer = container;
+            Debug.Log("TrailContainer asignado a: " + (trailContainer != null ? trailContainer.name : "NULL"));
+        }
 
-            Renderer rend = segment.GetComponent<Renderer>();
-            if (rend is not null && playerMaterial != null)
+        public void BeginTrail(Vector3 startPosition, Vector3 direction)
+        {
+            lastDirection = direction;
+            CreateNewSegment(startPosition, direction);
+        }
+
+        public void UpdateTrail(Vector3 currentPosition, Vector3 currentDirection)
+        {
+            if (currentSegment == null)
             {
-                rend.material = playerMaterial;
+                BeginTrail(currentPosition, currentDirection);
+                return;
+            }
+
+            if (currentDirection != lastDirection)
+            {
+                currentSegment.UpdateEndPoint(currentPosition);
+                currentSegment.ArmForOwner();
+
+                lastDirection = currentDirection;
+                CreateNewSegment(currentPosition, currentDirection);
+            }
+            else
+            {
+                currentSegment.UpdateEndPoint(currentPosition);
+            }
+        }
+
+        public void ArmCurrentSegment()
+        {
+            if (currentSegment != null)
+            {
+                currentSegment.ArmForOwner();
+            }
+        }
+
+        public void FinalizeCurrentTrail(Vector3 currentPosition)
+        {
+            if (currentSegment == null) return;
+
+            currentSegment.UpdateEndPoint(currentPosition);
+            currentSegment.ArmForOwner();
+        }
+
+        public TronTrailSegment GetCurrentSegment()
+        {
+            return currentSegment;
+        }
+
+        private void CreateNewSegment(Vector3 startPosition, Vector3 direction)
+        {
+            GameObject segmentObj = Instantiate(trailPrefab);
+
+            if (trailContainer != null)
+            {
+                segmentObj.transform.SetParent(trailContainer, true);
+            }
+
+            currentSegment = segmentObj.GetComponent<TronTrailSegment>();
+
+            if (currentSegment != null)
+            {
+                currentSegment.Initialize(
+                    startPosition,
+                    direction,
+                    playerMaterial,
+                    trailThickness,
+                    ownerPlayerID
+                );
+                Debug.Log("Creando trail. Parent: " + (trailContainer != null ? trailContainer.name : "NULL"));
             }
         }
     }
