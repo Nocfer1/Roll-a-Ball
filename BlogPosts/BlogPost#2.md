@@ -12,8 +12,7 @@ Players start selecting one of the available characters (number of characters to
 The first minigame is an endless runner where both players move forward automatically while avoiding incoming obstacles. The goal is to survive until a fixed amount of time. The second miningame is inspired by Tron, where players move continuously and leave a trail behind. Colliding with walls or trails causes in elimination! and the last player standing wins.
 
 The system is structured using multiple scenes such as:
-- Main Menu
-- Character Selection
+- Main Menu and Character Selection
 - Lobby
 - RunnerMinigame
 - TronMinigame
@@ -22,10 +21,10 @@ The system is structured using multiple scenes such as:
 Controls are based on the followed input system: each player uses an 8-directional stick and multiple buttons for actions such as movement, selection, interaction, and pause.
 
 Milestone 1, Core System: 
-Have implemented input handling, player movement, GameManager, and basic scene nvigation.
+Have implemented input handling, player movement, GameManager, basic scene nvigation and have completed character selection
 
 Milestone 2, Game Flow: 
-Have completed character slection, lobby interaction, and smooth transitions between scenes and minigames:)
+Lobby interaction, and smooth transitions between scenes and minigames:)
 
 Milestone 3, Minigames!
 Refined both minigames, by implementing win/lose conditions, UI, and having bug-free minigames
