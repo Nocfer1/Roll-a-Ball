@@ -12,7 +12,7 @@ Players start selecting one of the available characters (number of characters to
 The first minigame is an endless runner where both players move forward automatically while avoiding incoming obstacles. The goal is to survive until a fixed amount of time. The second miningame is inspired by Tron, where players move continuously and leave a trail behind. Colliding with walls or trails causes in elimination! and the last player standing wins.
 
 The system is structured using multiple scenes such as:
-- Main Menu
+- Main Menu (Might get merged with Character Selection scene)
 - Character Selection
 - Lobby
 - RunnerMinigame
