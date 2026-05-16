@@ -1,0 +1,4 @@
+Development
+
+Now it's time to make the lobby and the two portals for the minigames. In order to achieve this I wanted to make the camera look in good position as there are 2 players going around the lobby, which means that setting a follower-camera would be a good idea. However, I decided to go for a camera setting of Orthographic perspective instead of Perspective. This will make the lobby scene more adjusted with what brings (portals, two players going around).
+
