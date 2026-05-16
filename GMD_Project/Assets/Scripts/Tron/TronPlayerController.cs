@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Tron
 {
@@ -10,6 +11,12 @@ namespace Tron
         public float ownerTrailArmDelay = 0.08f;
         public float headOnKillDistance = 0.45f;
 
+        [Header("Input")]
+        public float directionDeadZone = 0.5f;
+        public float directionResetDeadZone = 0.2f;
+
+        private bool directionReady = true;
+
         private bool isDead = false;
         private float aliveTimer = 0f;
 
@@ -19,10 +26,10 @@ namespace Tron
         public LayerMask trailLayer;
         public float trailCheckRadius = 0.14f;
         public Vector3 trailCheckOffset = new Vector3(0f, -0.12f, 0f);
-        
+
         private float ignoreOwnTrailAfterTurnTimer = 0f;
         public float ignoreOwnTrailAfterTurnDuration = 0.1f;
-        
+
         private Vector3 currentDirection = Vector3.right;
 
         private TronTrailSpawner trailSpawner;
@@ -58,12 +65,12 @@ namespace Tron
             {
                 trailSpawner.UpdateTrail(transform.position, currentDirection);
             }
-            
+
             if (ignoreOwnTrailAfterTurnTimer > 0f)
             {
                 ignoreOwnTrailAfterTurnTimer -= Time.deltaTime;
             }
-            
+
             UpdateOwnerTrailArming();
             CheckHeadOnCollision();
             CheckTrailCollision();
@@ -73,31 +80,115 @@ namespace Tron
         {
             Vector3 desiredDirection = currentDirection;
 
+            Vector3 keyboardDirection = GetKeyboardDirection();
+            if (keyboardDirection != Vector3.zero)
+            {
+                desiredDirection = keyboardDirection;
+            }
+
+            Vector3 gamepadDirection = GetGamepadDirection();
+            if (gamepadDirection != Vector3.zero)
+            {
+                desiredDirection = gamepadDirection;
+            }
+
+            TryChangeDirection(desiredDirection);
+        }
+
+        private Vector3 GetKeyboardDirection()
+        {
             if (playerID == 1)
             {
-                if (Input.GetKeyDown(KeyCode.W)) desiredDirection = Vector3.forward;
-                if (Input.GetKeyDown(KeyCode.S)) desiredDirection = Vector3.back;
-                if (Input.GetKeyDown(KeyCode.A)) desiredDirection = Vector3.left;
-                if (Input.GetKeyDown(KeyCode.D)) desiredDirection = Vector3.right;
+                if (Input.GetKeyDown(KeyCode.W)) return Vector3.forward;
+                if (Input.GetKeyDown(KeyCode.S)) return Vector3.back;
+                if (Input.GetKeyDown(KeyCode.A)) return Vector3.left;
+                if (Input.GetKeyDown(KeyCode.D)) return Vector3.right;
             }
             else if (playerID == 2)
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow)) desiredDirection = Vector3.forward;
-                if (Input.GetKeyDown(KeyCode.DownArrow)) desiredDirection = Vector3.back;
-                if (Input.GetKeyDown(KeyCode.LeftArrow)) desiredDirection = Vector3.left;
-                if (Input.GetKeyDown(KeyCode.RightArrow)) desiredDirection = Vector3.right;
+                if (Input.GetKeyDown(KeyCode.UpArrow)) return Vector3.forward;
+                if (Input.GetKeyDown(KeyCode.DownArrow)) return Vector3.back;
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) return Vector3.left;
+                if (Input.GetKeyDown(KeyCode.RightArrow)) return Vector3.right;
             }
 
-            if (desiredDirection != currentDirection && desiredDirection != -currentDirection)
+            return Vector3.zero;
+        }
+
+        private Vector3 GetGamepadDirection()
+        {
+            Gamepad pad = GetGamepadForPlayer(playerID);
+
+            if (pad == null)
+                return Vector3.zero;
+
+            Vector2 input = pad.leftStick.ReadValue();
+
+            if (input.magnitude < directionDeadZone)
             {
-                currentDirection = desiredDirection;
-                transform.forward = currentDirection;
+                Vector2 dpadInput = pad.dpad.ReadValue();
 
-                waitingToArmOwnerTrail = true;
-                ownerTrailTimer = 0f;
-
-                ignoreOwnTrailAfterTurnTimer = ignoreOwnTrailAfterTurnDuration;
+                if (dpadInput.magnitude >= directionDeadZone)
+                    input = dpadInput;
             }
+
+            if (!directionReady)
+            {
+                if (input.magnitude <= directionResetDeadZone)
+                    directionReady = true;
+
+                return Vector3.zero;
+            }
+
+            if (input.magnitude < directionDeadZone)
+                return Vector3.zero;
+
+            directionReady = false;
+
+            if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
+            {
+                return input.x > 0f ? Vector3.right : Vector3.left;
+            }
+
+            return input.y > 0f ? Vector3.forward : Vector3.back;
+        }
+
+        private void TryChangeDirection(Vector3 desiredDirection)
+        {
+            if (desiredDirection == Vector3.zero)
+                return;
+
+            if (desiredDirection == currentDirection)
+                return;
+
+            if (desiredDirection == -currentDirection)
+                return;
+
+            currentDirection = desiredDirection;
+            transform.forward = currentDirection;
+
+            waitingToArmOwnerTrail = true;
+            ownerTrailTimer = 0f;
+
+            ignoreOwnTrailAfterTurnTimer = ignoreOwnTrailAfterTurnDuration;
+        }
+
+        private Gamepad GetGamepadForPlayer(int id)
+        {
+            if (Gamepad.all.Count == 0)
+                return null;
+
+            if (Gamepad.all.Count >= 2)
+            {
+                int index = id - 1;
+
+                if (index >= 0 && index < Gamepad.all.Count)
+                    return Gamepad.all[index];
+
+                return null;
+            }
+
+            return Gamepad.all[0];
         }
 
         private void UpdateOwnerTrailArming()
@@ -132,7 +223,6 @@ namespace Tron
 
                 if (DistanceXZ(transform.position, otherPlayer.transform.position) <= headOnKillDistance)
                 {
-                    Debug.Log("Head-on collision");
                     Die();
                     otherPlayer.Die();
                     return;
@@ -158,17 +248,11 @@ namespace Tron
 
                 if (trailSegment.ownerPlayerID == playerID)
                 {
-                    // ignorar el segmento activo actual
                     if (trailSpawner != null && trailSegment == trailSpawner.GetCurrentSegment())
-                    {
                         continue;
-                    }
 
-                    // ignorar por un instante tu propio trail después de girar
                     if (ignoreOwnTrailAfterTurnTimer > 0f)
-                    {
                         continue;
-                    }
 
                     if (trailSegment.armedForOwner)
                     {
@@ -183,7 +267,7 @@ namespace Tron
                 }
             }
         }
-        
+
         private float DistanceXZ(Vector3 a, Vector3 b)
         {
             a.y = 0f;

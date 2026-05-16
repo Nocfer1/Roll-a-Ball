@@ -1,5 +1,5 @@
 using UnityEngine;
-using Player;
+using PlayerFolder;
 using Runner;
 using Managers;
 
@@ -23,7 +23,6 @@ namespace Tron
         {
             if (GameManager.Instance == null)
             {
-                Debug.LogError("No existe GameManager en la escena.");
                 return;
             }
 

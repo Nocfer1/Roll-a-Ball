@@ -1,5 +1,5 @@
 using UnityEngine;
-using Player;
+using PlayerFolder;
 
 namespace Runner
 {
@@ -18,7 +18,6 @@ namespace Runner
         {
             if (GameManager.Instance == null)
             {
-                Debug.LogError("No existe GameManager en la escena.");
                 return;
             }
 
@@ -30,34 +29,54 @@ namespace Runner
         {
             GameObject prefab = GetPrefab(characterType);
 
-            if (prefab == null || spawnPoint == null) return;
+            if (prefab == null || spawnPoint == null)
+                return;
 
             GameObject spawnedPlayer = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
 
             LobbyPlayerController lobbyController = spawnedPlayer.GetComponent<LobbyPlayerController>();
             if (lobbyController != null)
-            {
                 lobbyController.enabled = false;
-            }
 
             RunnerPlayerController runnerController = spawnedPlayer.GetComponent<RunnerPlayerController>();
             if (runnerController != null)
             {
                 runnerController.playerID = playerID;
-                runnerController.enabled = true;
+
+                runnerController.enabled = false;
             }
 
             RunnerPlayerHealth health = spawnedPlayer.GetComponent<RunnerPlayerHealth>();
             if (health != null)
-            {
                 health.playerID = playerID;
 
-                if (RunnerGameManager.Instance != null)
+            Animator animator = spawnedPlayer.GetComponentInChildren<Animator>();
+
+            if (animator != null && RunnerGameManager.Instance != null)
+            {
+                RuntimeAnimatorController runnerAnimator =
+                    RunnerGameManager.Instance.runnerAnimatorController;
+
+                if (runnerAnimator != null)
+                    animator.runtimeAnimatorController = runnerAnimator;
+
+                animator.SetBool("IsRunning", false);
+                animator.Play("Happy Idle", 0, 0f);
+            }
+
+            if (RunnerGameManager.Instance != null)
+            {
+                if (playerID == 1)
                 {
-                    if (playerID == 1)
-                        RunnerGameManager.Instance.player1Health = health;
-                    else
-                        RunnerGameManager.Instance.player2Health = health;
+                    RunnerGameManager.Instance.player1Health = health;
+                    RunnerGameManager.Instance.player1Controller = runnerController;
+                    RunnerGameManager.Instance.player1Animator = animator;
+                }
+                else
+                {
+                    RunnerGameManager.Instance.player2Health = health;
+                    RunnerGameManager.Instance.player2Controller = runnerController;
+                    RunnerGameManager.Instance.player2Animator = animator;
                 }
             }
         }
@@ -68,10 +87,13 @@ namespace Runner
             {
                 case CharacterType.Alice:
                     return alicePrefab;
+
                 case CharacterType.Billy:
                     return billyPrefab;
+
                 case CharacterType.Charlie:
                     return charliePrefab;
+
                 default:
                     return null;
             }

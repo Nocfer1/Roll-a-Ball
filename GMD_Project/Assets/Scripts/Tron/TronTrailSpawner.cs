@@ -22,7 +22,6 @@ namespace Tron
         public void SetTrailContainer(Transform container)
         {
             trailContainer = container;
-            Debug.Log("TrailContainer asignado a: " + (trailContainer != null ? trailContainer.name : "NULL"));
         }
 
         public void BeginTrail(Vector3 startPosition, Vector3 direction)
@@ -94,7 +93,6 @@ namespace Tron
                     trailThickness,
                     ownerPlayerID
                 );
-                Debug.Log("Creando trail. Parent: " + (trailContainer != null ? trailContainer.name : "NULL"));
             }
         }
     }

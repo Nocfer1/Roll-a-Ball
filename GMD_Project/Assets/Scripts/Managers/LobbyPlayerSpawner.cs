@@ -1,5 +1,5 @@
 using UnityEngine;
-using Player;
+using PlayerFolder;
 
 namespace Managers
 {
@@ -16,7 +16,6 @@ namespace Managers
         {
             if (GameManager.Instance == null)
             {
-                Debug.LogError("No existe GameManager en la escena.");
                 return;
             }
 
