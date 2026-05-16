@@ -22,10 +22,10 @@ The system is structured using multiple scenes such as:
 Controls are based on the followed input system: each player uses an 8-directional stick and multiple buttons for actions such as movement, selection, interaction, and pause.
 
 Milestone 1, Core System: 
-Have implemented input handling, player movement, GameManager, and basic scene nvigation.
+Have implemented input handling, player movement, GameManager, and basic scene nvigation and have completed character selection
 
 Milestone 2, Game Flow: 
-Have completed character slection, lobby interaction, and smooth transitions between scenes and minigames:)
+Lobby interaction, and smooth transitions between scenes and minigames:)
 
 Milestone 3, Minigames!
 Refined both minigames, by implementing win/lose conditions, UI, and having bug-free minigames
