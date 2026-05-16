@@ -7,4 +7,4 @@ In order to achieve this project, I set a path which contains 6 blogs, take a lo
 - Blog Post #3: Development
 - Blog Post #4: Development
 - Blog Post #5: Development
-- Blog Post #6: Retrospectiv and Conclusion
+- Blog Post #6: Retrospective and Conclusion
